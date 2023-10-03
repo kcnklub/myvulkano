@@ -46,7 +46,7 @@ pub fn get_vk_device_and_queue(
 ) -> (Arc<Device>, Arc<Queue>)
 {
     let (device, mut queues) = Device::new(
-        physical_device.clone(),
+        physical_device,
         DeviceCreateInfo {
             queue_create_infos: vec![QueueCreateInfo {
                 queue_family_index,
@@ -78,8 +78,8 @@ pub fn build_initial_swapchain(
             .0,
     );
     let (swapchain, images) = Swapchain::new(
-        device.clone(),
-        surface.clone(),
+        device,
+        surface,
         SwapchainCreateInfo {
             min_image_count: caps.min_image_count + 1,
             image_format,
@@ -103,14 +103,14 @@ pub fn select_physical_device(
     instance
         .enumerate_physical_devices()
         .unwrap()
-        .filter(|p| p.supported_extensions().contains(&device_extensions))
+        .filter(|p| p.supported_extensions().contains(device_extensions))
         .filter_map(|p| {
             p.queue_family_properties()
                 .iter()
                 .enumerate()
                 .position(|(i, q)| {
                     q.queue_flags.contains(QueueFlags::GRAPHICS)
-                        && p.surface_support(i as u32, &surface).unwrap_or(false)
+                        && p.surface_support(i as u32, surface).unwrap_or(false)
                 })
                 .map(|q| (p, q as u32))
         })

@@ -131,7 +131,7 @@ impl Renderer
             physical_device,
         );
 
-        let render_pass = get_render_pass(device.clone(), &swapchain.clone());
+        let render_pass = get_render_pass(device.clone(), &swapchain);
         let frame_buffers = get_framebuffers(&images, render_pass.clone());
 
         let vertex_shader = shaders::vertex_shader_for_moving::load(device.clone())

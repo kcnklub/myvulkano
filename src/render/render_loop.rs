@@ -73,7 +73,7 @@ impl RenderLoop
             image_fence.wait(None).unwrap();
         }
 
-        self.renderer.update_uniform(image_i, &square);
+        self.renderer.update_uniform(image_i, square);
 
         let previous_future = match self.fences[self.previous_fence_i as usize].clone()
         {
