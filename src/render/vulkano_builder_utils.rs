@@ -25,7 +25,8 @@ use winit::window::Window;
 
 use super::renderer::Vertex2d;
 
-pub fn get_configured_vk_instance() -> Arc<Instance> {
+pub fn get_configured_vk_instance() -> Arc<Instance>
+{
     let library = VulkanLibrary::new().expect("No local vulkan library/DLL");
     let required_extensions = vulkano_win::required_extensions(&library);
     Instance::new(
@@ -42,7 +43,8 @@ pub fn get_vk_device_and_queue(
     physical_device: Arc<PhysicalDevice>,
     queue_family_index: u32,
     device_extensions: DeviceExtensions,
-) -> (Arc<Device>, Arc<Queue>) {
+) -> (Arc<Device>, Arc<Queue>)
+{
     let (device, mut queues) = Device::new(
         physical_device.clone(),
         DeviceCreateInfo {
@@ -65,7 +67,8 @@ pub fn build_initial_swapchain(
     device: Arc<Device>,
     caps: SurfaceCapabilities,
     physical_device: Arc<PhysicalDevice>,
-) -> (Arc<Swapchain>, Vec<Arc<SwapchainImage>>) {
+) -> (Arc<Swapchain>, Vec<Arc<SwapchainImage>>)
+{
     let dimensions = window.inner_size();
     let composite_alpha = caps.supported_composite_alpha.into_iter().next().unwrap();
     let image_format = Some(
@@ -95,7 +98,8 @@ pub fn select_physical_device(
     instance: &Arc<Instance>,
     surface: &Arc<Surface>,
     device_extensions: &DeviceExtensions,
-) -> (Arc<PhysicalDevice>, u32) {
+) -> (Arc<PhysicalDevice>, u32)
+{
     instance
         .enumerate_physical_devices()
         .unwrap()
@@ -110,7 +114,8 @@ pub fn select_physical_device(
                 })
                 .map(|q| (p, q as u32))
         })
-        .min_by_key(|(p, _)| match p.properties().device_type {
+        .min_by_key(|(p, _)| match p.properties().device_type
+        {
             PhysicalDeviceType::DiscreteGpu => 0,
             PhysicalDeviceType::IntegratedGpu => 1,
             PhysicalDeviceType::VirtualGpu => 2,
@@ -120,7 +125,11 @@ pub fn select_physical_device(
         .unwrap()
 }
 
-pub fn get_render_pass(device: Arc<Device>, swapchain: &Arc<Swapchain>) -> Arc<RenderPass> {
+pub fn get_render_pass(
+    device: Arc<Device>,
+    swapchain: &Arc<Swapchain>,
+) -> Arc<RenderPass>
+{
     vulkano::single_pass_renderpass!(
         device,
         attachments: {
@@ -142,7 +151,8 @@ pub fn get_render_pass(device: Arc<Device>, swapchain: &Arc<Swapchain>) -> Arc<R
 pub fn get_framebuffers(
     images: &[Arc<SwapchainImage>],
     render_pass: Arc<RenderPass>,
-) -> Vec<Arc<Framebuffer>> {
+) -> Vec<Arc<Framebuffer>>
+{
     images
         .iter()
         .map(|image| -> Arc<Framebuffer> {
@@ -165,7 +175,8 @@ pub fn get_pipeline(
     fs: Arc<ShaderModule>,
     render_pass: Arc<RenderPass>,
     viewport: Viewport,
-) -> Arc<GraphicsPipeline> {
+) -> Arc<GraphicsPipeline>
+{
     GraphicsPipeline::start()
         .vertex_input_state(Vertex2d::per_vertex())
         .vertex_shader(vs.entry_point("main").unwrap(), ())
