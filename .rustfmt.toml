@@ -1,4 +1,4 @@
 brace_style = "AlwaysNextLine"
 control_brace_style = "AlwaysNextLine"
 wrap_comments = true
-fn_args_layout = "Vertical"
+fn_params_layout = "Vertical"
