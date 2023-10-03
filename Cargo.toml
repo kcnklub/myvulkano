@@ -1,5 +1,5 @@
 [package]
-name = "myvulkano"
+name = "vulkano-project-template"
 version = "0.1.0"
 edition = "2021"
 

@@ -34,13 +34,9 @@ use winit::{
     window::{Window, WindowBuilder},
 };
 
-use crate::{
-    app::Square,
-    get_framebuffers, get_pipeline, get_render_pass, select_physical_device, shaders,
-    window_initialization::{self, build_initial_swapchain, get_vk_device_and_queue},
-};
+use crate::{app::Square, shaders};
 
-use super::buffers::Buffers;
+use super::{buffers::Buffers, vulkano_builder_utils::*};
 
 pub type Fence = FenceSignalFuture<
     PresentFuture<CommandBufferExecFuture<JoinFuture<Box<dyn GpuFuture>, SwapchainAcquireFuture>>>,
@@ -89,7 +85,7 @@ pub struct Renderer {
 
 impl Renderer {
     pub fn initialize(event_loop: &EventLoop<()>) -> Self {
-        let instance = window_initialization::get_configured_vk_instance();
+        let instance = get_configured_vk_instance();
 
         let surface = WindowBuilder::new()
             .build_vk_surface(event_loop, instance.clone())

@@ -683,21 +683,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "myvulkano"
-version = "0.1.0"
-dependencies = [
- "image",
- "rand",
- "shaderc",
- "shaderc-sys",
- "vulkano",
- "vulkano-shaders",
- "vulkano-util",
- "vulkano-win",
- "winit",
-]
-
-[[package]]
 name = "nanorand"
 version = "0.7.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1430,6 +1415,21 @@ dependencies = [
  "proc-macro2",
  "quote",
  "syn 1.0.109",
+]
+
+[[package]]
+name = "vulkano-project-template"
+version = "0.1.0"
+dependencies = [
+ "image",
+ "rand",
+ "shaderc",
+ "shaderc-sys",
+ "vulkano",
+ "vulkano-shaders",
+ "vulkano-util",
+ "vulkano-win",
+ "winit",
 ]
 
 [[package]]
