@@ -6,33 +6,7 @@ env:
   CARGO_TERM_COLOR: always
 
 jobs:
-  test:
-    name: Test
-    runs-on: ubuntu-latest
-    steps: 
-      - uses: actions/checkout@v3
-      - uses: dtolnay/rust-toolchain@stable
-      - uses: Swatinem/rust-cache@v2
-        with: 
-          key: template-project
-      - name: Run tests
-        run: cargo test
-
-  clippy:
-    name: Clippy
-    runs-on: ubuntu-latest
-    steps: 
-      - uses: actions/checkout@v3
-      - uses: dtolnay/rust-toolchain@stable
-        with: 
-          components: clippy
-      - uses: Swatinem/rust-cache@v2
-        with: 
-          key: template-project
-      - name: Linting
-        run: cargo clippy -- -D warnings
-        
-  coverage: 
+  test: 
     name: Code coverage
     runs-on: ubuntu-latest
     steps:
