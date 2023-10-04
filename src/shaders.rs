@@ -1,5 +1,4 @@
-pub mod vertex_shader_for_moving
-{
+pub mod vertex_shader_for_moving {
     vulkano_shaders::shader! {
         ty: "vertex",
         src: r"
@@ -27,8 +26,7 @@ pub mod vertex_shader_for_moving
     }
 }
 
-pub mod fragment_shader_for_moving
-{
+pub mod fragment_shader_for_moving {
     vulkano_shaders::shader! {
         ty: "fragment",
         src: r"

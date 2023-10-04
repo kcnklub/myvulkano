@@ -17,22 +17,19 @@ use super::renderer::{Allocators, Model};
 
 pub type Uniform<U> = (Subbuffer<U>, Arc<PersistentDescriptorSet>);
 
-pub struct Buffers<V: BufferContents, U: BufferContents>
-{
+pub struct Buffers<V: BufferContents, U: BufferContents> {
     pub vertex: Subbuffer<[V]>,
     pub index: Subbuffer<[u16]>,
     pub uniforms: Vec<Uniform<U>>,
 }
 
-impl<V: BufferContents, U: BufferContents> Buffers<V, U>
-{
+impl<V: BufferContents, U: BufferContents> Buffers<V, U> {
     pub fn initialize_device_local<M: Model<V, U>>(
         allocators: &Allocators,
         descriptor_set_layout: Arc<DescriptorSetLayout>,
         uniform_buffer_count: usize,
         transfer_queue: Arc<Queue>,
-    ) -> Self
-    {
+    ) -> Self {
         let (vertex, vertex_future) =
             create_device_local_vertex::<V, U, M>(allocators, transfer_queue.clone());
         let (index, index_future) =
@@ -56,21 +53,15 @@ impl<V: BufferContents, U: BufferContents> Buffers<V, U>
         }
     }
 
-    pub fn get_vertex(&self) -> Subbuffer<[V]>
-    {
+    pub fn get_vertex(&self) -> Subbuffer<[V]> {
         self.vertex.clone()
     }
 
-    pub fn get_index(&self) -> Subbuffer<[u16]>
-    {
+    pub fn get_index(&self) -> Subbuffer<[u16]> {
         self.index.clone()
     }
 
-    pub fn get_uniform_descriptor_set(
-        &self,
-        i: usize,
-    ) -> Arc<PersistentDescriptorSet>
-    {
+    pub fn get_uniform_descriptor_set(&self, i: usize) -> Arc<PersistentDescriptorSet> {
         self.uniforms[i].1.clone()
     }
 }

@@ -18,18 +18,6 @@ jobs:
       - name: Run tests
         run: cargo test
 
-  # Format container job
-  fmt:
-    name: Rustfmt
-    runs-on: ubuntu-latest
-    steps: 
-      - uses: actions/checkout@v3
-      - uses: dtolnay/rust-toolchain@nightly
-        with: 
-          components: rustfmt
-      - name: Enforce formatting
-        run: cargo +nightly fmt --check
-        
   clippy:
     name: Clippy
     runs-on: ubuntu-latest

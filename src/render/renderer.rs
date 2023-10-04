@@ -44,23 +44,19 @@ pub type Fence = FenceSignalFuture<
 
 #[derive(BufferContents, Vertex)]
 #[repr(C)]
-pub struct Vertex2d
-{
+pub struct Vertex2d {
     #[format(R32G32_SFLOAT)]
     pub position: [f32; 2],
 }
 
-pub struct Allocators
-{
+pub struct Allocators {
     pub memory: StandardMemoryAllocator,
     pub command_buffer: StandardCommandBufferAllocator,
     pub descriptor_set: StandardDescriptorSetAllocator,
 }
 
-impl Allocators
-{
-    pub fn new(device: Arc<Device>) -> Self
-    {
+impl Allocators {
+    pub fn new(device: Arc<Device>) -> Self {
         Allocators {
             memory: StandardMemoryAllocator::new_default(device.clone()),
             command_buffer: StandardCommandBufferAllocator::new(device.clone(), Default::default()),
@@ -69,8 +65,7 @@ impl Allocators
     }
 }
 
-pub struct Renderer
-{
+pub struct Renderer {
     _instance: Arc<Instance>,
     window: Arc<Window>,
     device: Arc<Device>,
@@ -88,10 +83,8 @@ pub struct Renderer
     command_buffers: Vec<Arc<PrimaryAutoCommandBuffer>>,
 }
 
-impl Renderer
-{
-    pub fn initialize(event_loop: &EventLoop<()>) -> Self
-    {
+impl Renderer {
+    pub fn initialize(event_loop: &EventLoop<()>) -> Self {
         let instance = get_configured_vk_instance();
 
         let surface = WindowBuilder::new()
@@ -189,13 +182,11 @@ impl Renderer
         }
     }
 
-    pub fn get_image_count(&self) -> usize
-    {
+    pub fn get_image_count(&self) -> usize {
         self.images.len()
     }
 
-    pub fn handle_window_resize(&mut self)
-    {
+    pub fn handle_window_resize(&mut self) {
         self.recreate_swapchain();
         self.viewport.dimensions = self.window.inner_size().into();
 
@@ -216,13 +207,11 @@ impl Renderer
         )
     }
 
-    pub fn recreate_swapchain(&mut self)
-    {
+    pub fn recreate_swapchain(&mut self) {
         let (new_swapchain, new_images) = match self.swapchain.recreate(SwapchainCreateInfo {
             image_extent: self.window.inner_size().into(),
             ..self.swapchain.create_info()
-        })
-        {
+        }) {
             Ok(r) => r,
             Err(SwapchainCreationError::ImageUsageNotSupported { .. }) => return,
             Err(e) => panic!("Failed to create new swapchain {:?}", e),
@@ -234,14 +223,12 @@ impl Renderer
     }
 
     pub fn acquire_swapchain_image(
-        &self
-    ) -> Result<(u32, bool, SwapchainAcquireFuture), AcquireError>
-    {
+        &self,
+    ) -> Result<(u32, bool, SwapchainAcquireFuture), AcquireError> {
         acquire_next_image(self.swapchain.clone(), None)
     }
 
-    pub fn synchronize(&self) -> NowFuture
-    {
+    pub fn synchronize(&self) -> NowFuture {
         let mut now = sync::now(self.device.clone());
         now.cleanup_finished();
 
@@ -253,8 +240,7 @@ impl Renderer
         previous_future: Box<dyn GpuFuture>,
         swapchain_acquire_future: SwapchainAcquireFuture,
         image_i: u32,
-    ) -> Result<Fence, FlushError>
-    {
+    ) -> Result<Fence, FlushError> {
         previous_future
             .join(swapchain_acquire_future)
             .then_execute(
@@ -269,12 +255,7 @@ impl Renderer
             .then_signal_fence_and_flush()
     }
 
-    pub fn update_uniform(
-        &mut self,
-        index: u32,
-        square: &Square,
-    )
-    {
+    pub fn update_uniform(&mut self, index: u32, square: &Square) {
         let mut uniform_content = self.buffers.uniforms[index as usize]
             .0
             .write()
@@ -291,8 +272,7 @@ fn create_simple_command_buffers<V: BufferContents, U: BufferContents>(
     pipeline: Arc<GraphicsPipeline>,
     framebuffers: &[Arc<Framebuffer>],
     buffers: &Buffers<V, U>,
-) -> Vec<Arc<PrimaryAutoCommandBuffer>>
-{
+) -> Vec<Arc<PrimaryAutoCommandBuffer>> {
     framebuffers
         .iter()
         .enumerate()
@@ -338,8 +318,7 @@ fn create_simple_command_buffers<V: BufferContents, U: BufferContents>(
 pub fn create_framebuffers_from_swapchain_images(
     images: &[Arc<SwapchainImage>],
     render_pass: Arc<RenderPass>,
-) -> Vec<Arc<Framebuffer>>
-{
+) -> Vec<Arc<Framebuffer>> {
     images
         .iter()
         .map(|image| {
@@ -356,8 +335,7 @@ pub fn create_framebuffers_from_swapchain_images(
         .collect::<Vec<_>>()
 }
 
-pub trait Model<V: BufferContents, U: BufferContents>
-{
+pub trait Model<V: BufferContents, U: BufferContents> {
     fn get_indices() -> Vec<u16>;
     fn get_vertices() -> Vec<V>;
     fn get_initial_uniform_data() -> U;
@@ -367,10 +345,8 @@ pub struct SquareModel;
 
 type UniformData = shaders::vertex_shader_for_moving::Data;
 
-impl Model<Vertex2d, UniformData> for SquareModel
-{
-    fn get_vertices() -> Vec<Vertex2d>
-    {
+impl Model<Vertex2d, UniformData> for SquareModel {
+    fn get_vertices() -> Vec<Vertex2d> {
         vec![
             Vertex2d {
                 position: [-0.25, -0.25],
@@ -387,13 +363,11 @@ impl Model<Vertex2d, UniformData> for SquareModel
         ]
     }
 
-    fn get_indices() -> Vec<u16>
-    {
+    fn get_indices() -> Vec<u16> {
         vec![0, 1, 2, 1, 2, 3]
     }
 
-    fn get_initial_uniform_data() -> UniformData
-    {
+    fn get_initial_uniform_data() -> UniformData {
         UniformData {
             color: [0.0, 0.0, 0.0].into(),
             position: [0.0, 0.0],
